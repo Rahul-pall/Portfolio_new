@@ -1,0 +1,111 @@
+@import 'tailwindcss';
+
+/* Deep-space control room: cyan + violet light on near-black glass, amber for "grain" highlights. */
+@theme {
+  --color-void: #04060b;
+  --color-deep: #080c16;
+  --color-panel: rgb(16 22 38 / 0.62);
+  --color-panel-solid: #0e1424;
+  --color-edge: rgb(122 160 255 / 0.14);
+  --color-edge-hot: rgb(79 227 255 / 0.45);
+  --color-ink: #e8eefa;
+  --color-dim: #8c97b2;
+  --color-soft: #b9c3da;
+  --color-cyan: #4fe3ff;
+  --color-violet: #8b7cff;
+  --color-amber: #ffb547;
+  --color-mint: #3df59a;
+
+  --font-display: var(--font-unbounded), 'Segoe UI', system-ui, sans-serif;
+  --font-sans: var(--font-figtree), 'Segoe UI', system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, Consolas, monospace;
+
+  --animate-marquee: marquee 40s linear infinite;
+  --animate-pulse-ring: pulse-ring 2s infinite;
+  --animate-blink: blink 1s steps(1) infinite;
+  --animate-beam: beam 6s linear infinite;
+  --animate-meteor: meteor 5s linear infinite;
+  --animate-scroll-dot: scroll-dot 1.8s infinite;
+
+  @keyframes marquee { to { transform: translateX(-50%); } }
+  @keyframes pulse-ring {
+    0% { box-shadow: 0 0 0 0 rgb(79 227 255 / 0.6); }
+    70% { box-shadow: 0 0 0 8px rgb(79 227 255 / 0); }
+    100% { box-shadow: 0 0 0 0 rgb(79 227 255 / 0); }
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+  @keyframes beam { to { offset-distance: 100%; } }
+  @keyframes meteor {
+    0% { transform: rotate(215deg) translateX(0); opacity: 1; }
+    70% { opacity: 1; }
+    100% { transform: rotate(215deg) translateX(-600px); opacity: 0; }
+  }
+  @keyframes scroll-dot {
+    0% { opacity: 0; transform: translateY(0); }
+    30% { opacity: 1; }
+    100% { opacity: 0; transform: translateY(12px); }
+  }
+}
+
+@layer base {
+  html { color-scheme: dark; scroll-padding-top: 96px; overflow-x: clip; }
+  body {
+    background: var(--color-void);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--color-cyan); color: var(--color-void); }
+  :focus-visible { outline: 2px solid var(--color-cyan); outline-offset: 3px; border-radius: 6px; }
+  h1, h2, h3 { text-wrap: balance; }
+}
+
+@utility text-grad {
+  background: linear-gradient(100deg, var(--color-cyan), var(--color-violet) 55%, var(--color-amber));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+@utility bg-grad {
+  background: linear-gradient(100deg, var(--color-cyan), var(--color-violet) 55%, var(--color-amber));
+}
+@utility glass {
+  background: var(--color-panel);
+  border: 1px solid var(--color-edge);
+  backdrop-filter: blur(12px) saturate(140%);
+}
+@utility text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--color-cyan);
+  paint-order: stroke fill;
+}
+
+/* Page background: soft light pools over a masked grid. */
+.space-bg {
+  position: fixed; inset: 0; z-index: -10; pointer-events: none;
+  background:
+    radial-gradient(60vw 50vh at 85% 10%, rgb(139 124 255 / 0.14), transparent 70%),
+    radial-gradient(50vw 50vh at 5% 80%, rgb(79 227 255 / 0.08), transparent 70%),
+    linear-gradient(var(--color-void), var(--color-deep));
+}
+.space-bg::after {
+  content: ''; position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgb(122 160 255 / 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(122 160 255 / 0.05) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse at 50% 30%, #000 20%, transparent 75%);
+}
+
+/* Lenis */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* Custom cursor: only shown for fine pointers once JS adds .has-cursor */
+.has-cursor, .has-cursor a, .has-cursor button { cursor: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}

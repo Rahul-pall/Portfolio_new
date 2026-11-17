@@ -3,11 +3,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'motion/react';
-import { profile, projects } from '@/lib/data';
+import { useContent } from '@/components/ContentProvider';
 
 type Item = { label: string; hint: string; run: () => void };
 
 export default function CommandPalette() {
+  const { profile, projects } = useContent();
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState('');
   const [sel, setSel] = useState(0);
@@ -48,13 +49,13 @@ export default function CommandPalette() {
       { label: 'Go to journey', hint: 'section', run: go('experience') },
       { label: 'Go to stack', hint: 'section', run: go('skills') },
       { label: 'Go to contact', hint: 'section', run: go('contact') },
-      ...projects.map((p) => ({ label: `Case study: ${p.title}`, hint: 'page', run: () => router.push(`/projects/${p.slug}/`) })),
+      ...projects.map((p) => ({ label: `Case study: ${p.title}`, hint: 'page', run: () => router.push(`/projects/${p.slug}`) })),
       ...projects.filter((p) => p.live).map((p) => ({ label: `Open live: ${p.title}`, hint: 'live', run: ext(p.live!) })),
       { label: 'Open GitHub', hint: 'link', run: ext(profile.github) },
       { label: 'Open LinkedIn', hint: 'link', run: ext(profile.linkedin) },
       { label: 'Copy email', hint: 'action', run: () => navigator.clipboard?.writeText(profile.email).catch(() => {}) },
     ];
-  }, [router]);
+  }, [router, profile, projects]);
 
   const shown = items.filter((i) => i.label.toLowerCase().includes(q.toLowerCase()));
   const run = (item: Item) => {

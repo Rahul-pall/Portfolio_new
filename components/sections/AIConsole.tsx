@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { conversations, aiCards } from '@/lib/data';
+import { useContent } from '@/components/ContentProvider';
 import { SpotlightCard } from '@/components/ui/Effects';
 import Reveal from '@/components/ui/Reveal';
 import SectionHead from './SectionHead';
@@ -9,6 +9,7 @@ import SectionHead from './SectionHead';
 // A replay of the ERP assistant dock: pick a question and watch the answer
 // type out, followed by the lookups it was built from.
 export default function AIConsole() {
+  const { conversations, aiCards } = useContent();
   const [active, setActive] = useState(0);
   const [typed, setTyped] = useState('');
   const [showReads, setShowReads] = useState(false);

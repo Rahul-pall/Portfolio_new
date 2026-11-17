@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { profile } from '@/lib/data';
+import { useContent } from '@/components/ContentProvider';
 import { BorderBeam, Meteors } from '@/components/ui/Effects';
 import Reveal from '@/components/ui/Reveal';
+
+const handle = (url: string) => url.replace(/\/+$/, '').split('/').pop() ?? url;
 
 function CopyRow({ label, value }: { label: string; value: string }) {
   const [state, setState] = useState('Copy');
@@ -44,6 +46,7 @@ function LinkRow({ label, value, href }: { label: string; value: string; href: s
 }
 
 export default function Contact() {
+  const { profile } = useContent();
   return (
     <section id="contact" className="mx-auto max-w-[1120px] px-5 pb-24 pt-28 md:px-8">
       <div className="relative overflow-hidden rounded-[28px] border border-edge bg-[radial-gradient(ellipse_at_top_left,rgb(139_124_255/.18),transparent_55%),radial-gradient(ellipse_at_bottom_right,rgb(79_227_255/.12),transparent_55%)] p-7 md:p-12">
@@ -63,8 +66,8 @@ export default function Contact() {
           <Reveal delay={0.15} className="grid gap-2.5">
             <CopyRow label="Email" value={profile.email} />
             <CopyRow label="Phone" value={profile.phone} />
-            <LinkRow label="LinkedIn" value="rahul-pal-71498a244" href={profile.linkedin} />
-            <LinkRow label="GitHub" value="Rahul-pall" href={profile.github} />
+            <LinkRow label="LinkedIn" value={handle(profile.linkedin)} href={profile.linkedin} />
+            <LinkRow label="GitHub" value={handle(profile.github)} href={profile.github} />
           </Reveal>
         </div>
       </div>

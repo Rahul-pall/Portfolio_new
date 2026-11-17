@@ -4,7 +4,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { projects, type Category, type Project } from '@/lib/data';
+import type { Category, Project } from '@/lib/defaults';
+import { useContent } from '@/components/ContentProvider';
 import { BorderBeam, BrowserFrame, PhoneFrame } from '@/components/ui/Effects';
 import SectionHead from './SectionHead';
 
@@ -107,7 +108,7 @@ function Card({ p, index }: { p: Project; index: number }) {
             ))}
           </div>
           <div className="mt-auto flex flex-wrap items-center gap-4 pt-2">
-            <Link href={`/projects/${p.slug}/`} className="inline-flex items-center gap-2 rounded-full bg-ink px-4 py-2 text-sm font-semibold text-void transition hover:bg-cyan">
+            <Link href={`/projects/${p.slug}`} className="inline-flex items-center gap-2 rounded-full bg-ink px-4 py-2 text-sm font-semibold text-void transition hover:bg-cyan">
               Case study <span aria-hidden="true">→</span>
             </Link>
             {(p.live || p.repo) && (
@@ -126,6 +127,7 @@ function Card({ p, index }: { p: Project; index: number }) {
 }
 
 export default function Projects() {
+  const { projects } = useContent();
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>('All');
   const shown = projects.filter((p) => filter === 'All' || p.categories.includes(filter));
 

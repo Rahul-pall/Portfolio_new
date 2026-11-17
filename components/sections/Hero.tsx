@@ -7,21 +7,22 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { AnimatePresence, motion } from 'motion/react';
 import Scramble from '@/components/ui/Scramble';
 import Counter from '@/components/ui/Counter';
-import { profile } from '@/lib/data';
+import { useContent } from '@/components/ContentProvider';
 import type { ScrollState } from '@/components/three/HeroScene';
 
 const HeroScene = dynamic(() => import('@/components/three/HeroScene'), { ssr: false });
 
 export default function Hero() {
+  const { profile } = useContent();
   const section = useRef<HTMLElement>(null);
   const content = useRef<HTMLDivElement>(null);
   const scroll = useRef<ScrollState>({ progress: 0 });
   const [i, setI] = useState(0);
 
   useEffect(() => {
-    const t = setInterval(() => setI((n) => (n + 1) % profile.roles.length), 2400);
+    const t = setInterval(() => setI((n) => (n + 1) % Math.max(profile.roles.length, 1)), 2400);
     return () => clearInterval(t);
-  }, []);
+  }, [profile.roles.length]);
 
   // Scroll drives the 3D camera (via the shared ref) and lifts the copy away.
   useEffect(() => {
@@ -79,7 +80,7 @@ export default function Hero() {
                 exit={{ y: '-100%', opacity: 0 }}
                 transition={{ duration: 0.4, ease: [0.2, 0.8, 0.2, 1] }}
               >
-                {profile.roles[i]}
+                {profile.roles[i % Math.max(profile.roles.length, 1)]}
               </motion.span>
             </AnimatePresence>
           </span>

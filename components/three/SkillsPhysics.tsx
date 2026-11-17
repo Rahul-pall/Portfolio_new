@@ -6,7 +6,6 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { RoundedBox, Text } from '@react-three/drei';
 import { CuboidCollider, Physics, RigidBody, BallCollider, type RapierRigidBody } from '@react-three/rapier';
 import { Bloom, EffectComposer } from '@react-three/postprocessing';
-import { skills } from '@/lib/data';
 
 const COLORS: Record<string, string> = {
   Frontend: '#4FE3FF',
@@ -14,6 +13,7 @@ const COLORS: Record<string, string> = {
   'Data & AI': '#FFB547',
   DevOps: '#3DF59A',
 };
+const FALLBACK = ['#4FE3FF', '#8B7CFF', '#FFB547', '#3DF59A'];
 const FONT = '/fonts/JetBrainsMono-Medium.ttf';
 
 type Tile = { label: string; color: string; w: number; pos: [number, number, number] };
@@ -86,7 +86,7 @@ function Box() {
   );
 }
 
-function Scene({ shake }: { shake: React.RefObject<(() => void) | null> }) {
+function Scene({ shake, skills }: { shake: React.RefObject<(() => void) | null>; skills: Record<string, string[]> }) {
   const { viewport } = useThree();
   const bodies = useRef<(RapierRigidBody | null)[]>([]);
 
@@ -98,7 +98,7 @@ function Scene({ shake }: { shake: React.RefObject<(() => void) | null> }) {
         const width = Math.max(1.3, label.length * 0.17 + 0.6);
         list.push({
           label,
-          color: COLORS[group],
+          color: COLORS[group] ?? FALLBACK[list.length % FALLBACK.length],
           w: width,
           pos: [(seeded(i) - 0.5) * (viewport.width - width - 0.4), viewport.height / 2 + 1 + i * 0.75, 0],
         });
@@ -125,14 +125,14 @@ function Scene({ shake }: { shake: React.RefObject<(() => void) | null> }) {
   );
 }
 
-export default function SkillsPhysics({ shake }: { shake: React.RefObject<(() => void) | null> }) {
+export default function SkillsPhysics({ shake, skills }: { shake: React.RefObject<(() => void) | null>; skills: Record<string, string[]> }) {
   return (
     <Canvas camera={{ position: [0, 0, 12], fov: 40 }} dpr={[1, 1.75]} gl={{ antialias: true, alpha: true }} aria-label="Skill tiles in a physics box. Click a tile to throw it.">
       <ambientLight intensity={0.6} />
       <directionalLight position={[3, 5, 6]} intensity={2.2} />
       <pointLight position={[-4, 2, 4]} intensity={20} color="#8B7CFF" />
       <Suspense fallback={null}>
-        <Scene shake={shake} />
+        <Scene shake={shake} skills={skills} />
       </Suspense>
       <EffectComposer multisampling={0}>
         <Bloom mipmapBlur intensity={0.9} luminanceThreshold={0.4} />

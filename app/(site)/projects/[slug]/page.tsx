@@ -2,18 +2,22 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { projects } from '@/lib/data';
+import { getContent } from '@/lib/content';
 import { BorderBeam, BrowserFrame, PhoneFrame, SpotlightCard } from '@/components/ui/Effects';
 import Reveal from '@/components/ui/Reveal';
 
 type Params = { params: Promise<{ slug: string }> };
 
-export function generateStaticParams() {
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  const { projects } = await getContent();
   return projects.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
+  const { projects } = await getContent();
   const p = projects.find((x) => x.slug === slug);
   if (!p) return {};
   return { title: p.title, description: p.summary, openGraph: { images: p.cover ? [p.cover] : [] } };
@@ -21,6 +25,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 export default async function ProjectPage({ params }: Params) {
   const { slug } = await params;
+  const { projects } = await getContent();
   const index = projects.findIndex((x) => x.slug === slug);
   if (index < 0) notFound();
   const p = projects[index];
@@ -173,7 +178,7 @@ export default async function ProjectPage({ params }: Params) {
         </section>
       )}
 
-      <Link href={`/projects/${next.slug}/`} className="group relative mt-24 block overflow-hidden rounded-[22px] glass p-8 transition hover:border-edge-hot md:p-12">
+      <Link href={`/projects/${next.slug}`} className="group relative mt-24 block overflow-hidden rounded-[22px] glass p-8 transition hover:border-edge-hot md:p-12">
         <span className="font-mono text-xs uppercase tracking-widest text-dim">Next project</span>
         <span className="mt-2 flex items-center justify-between gap-4 font-display text-[clamp(1.8rem,5vw,3.4rem)] font-bold tracking-tight">
           {next.title}

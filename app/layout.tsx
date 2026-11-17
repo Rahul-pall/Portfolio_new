@@ -1,11 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Unbounded, Figtree, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
-import SmoothScroll from '@/components/SmoothScroll';
-import Cursor from '@/components/ui/Cursor';
-import Nav from '@/components/Nav';
-import CommandPalette from '@/components/CommandPalette';
-import Footer from '@/components/Footer';
 
 const unbounded = Unbounded({ subsets: ['latin'], weight: ['400', '600', '800'], variable: '--font-unbounded' });
 const figtree = Figtree({ subsets: ['latin'], weight: ['400', '500', '600'], variable: '--font-figtree' });
@@ -32,12 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${unbounded.variable} ${figtree.variable} ${jetbrains.variable}`}>
       <body>
         <div className="space-bg" aria-hidden="true" />
-        <SmoothScroll />
-        <Cursor />
-        <Nav />
-        <CommandPalette />
         {children}
-        <Footer />
       </body>
     </html>
   );

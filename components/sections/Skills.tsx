@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 import { useRef } from 'react';
 import { useInView } from 'motion/react';
-import { skills } from '@/lib/data';
+import { useContent } from '@/components/ContentProvider';
 import Reveal from '@/components/ui/Reveal';
 import SectionHead from './SectionHead';
 
@@ -17,6 +17,7 @@ const DOT: Record<string, string> = {
 };
 
 export default function Skills() {
+  const { skills } = useContent();
   const box = useRef<HTMLDivElement>(null);
   // Only start the physics world once the section is close to the screen.
   const near = useInView(box, { once: true, margin: '800px' });
@@ -31,7 +32,7 @@ export default function Skills() {
       />
       <Reveal>
         <div ref={box} className="relative h-[460px] overflow-hidden rounded-[22px] border border-edge bg-[radial-gradient(ellipse_at_50%_100%,rgb(79_227_255/.08),transparent_60%)] md:h-[520px]">
-          {near && <SkillsPhysics shake={shake} />}
+          {near && <SkillsPhysics shake={shake} skills={skills} />}
           <button
             onClick={() => shake.current?.()}
             className="glass absolute right-4 top-4 rounded-full px-4 py-2 font-mono text-xs text-cyan transition hover:border-edge-hot"
@@ -40,7 +41,7 @@ export default function Skills() {
           </button>
           <div className="pointer-events-none absolute left-4 top-4 flex flex-wrap gap-3 font-mono text-[11px] text-dim">
             {Object.keys(skills).map((g) => (
-              <span key={g} className="flex items-center gap-1.5"><i className={`size-2 rounded-full ${DOT[g]}`} />{g}</span>
+              <span key={g} className="flex items-center gap-1.5"><i className={`size-2 rounded-full ${DOT[g] ?? 'bg-cyan'}`} />{g}</span>
             ))}
           </div>
         </div>
@@ -50,7 +51,7 @@ export default function Skills() {
         {Object.entries(skills).map(([group, items]) => (
           <div key={group} className="rounded-2xl glass p-5">
             <h3 className="mb-2.5 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-dim">
-              <i className={`size-2 rounded-full ${DOT[group]}`} /> {group}
+              <i className={`size-2 rounded-full ${DOT[group] ?? 'bg-cyan'}`} /> {group}
             </h3>
             <p className="text-[15px] text-soft">{items.join(' · ')}</p>
           </div>

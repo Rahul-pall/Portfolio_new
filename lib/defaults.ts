@@ -252,3 +252,21 @@ export const skills = {
 };
 
 export const marquee = ['React', 'Next.js', 'Node.js', 'PostgreSQL', 'OpenAI', 'Three.js', 'Tailwind', 'Prisma', 'MongoDB', 'GitHub Actions', 'WhatsApp API', 'TypeScript'];
+
+export type Profile = typeof profile;
+export type Conversation = (typeof conversations)[number];
+export type AICard = (typeof aiCards)[number];
+export type ExperienceItem = (typeof experience)[number];
+
+/** Everything the site shows. The admin panel edits a copy of this, saved to storage. */
+export type Content = {
+  profile: Profile;
+  projects: Project[];
+  conversations: Conversation[];
+  aiCards: AICard[];
+  experience: ExperienceItem[];
+  skills: Record<string, string[]>;
+  marquee: string[];
+};
+
+export const defaultContent: Content = { profile, projects, conversations, aiCards, experience, skills, marquee };

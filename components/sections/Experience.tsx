@@ -3,10 +3,11 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { experience } from '@/lib/data';
+import { useContent } from '@/components/ContentProvider';
 import SectionHead from './SectionHead';
 
 export default function Experience() {
+  const { experience } = useContent();
   const list = useRef<HTMLOListElement>(null);
   const line = useRef<HTMLSpanElement>(null);
 

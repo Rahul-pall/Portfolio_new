@@ -1,6 +1,9 @@
-import { marquee } from '@/lib/data';
+'use client';
+
+import { useContent } from '@/components/ContentProvider';
 
 export default function Marquee() {
+  const { marquee } = useContent();
   const row = [...marquee, ...marquee];
   return (
     <div className="relative overflow-hidden border-y border-edge bg-deep/60 py-5 [mask-image:linear-gradient(90deg,transparent,#000_12%,#000_88%,transparent)]" aria-label="Technologies I use">
